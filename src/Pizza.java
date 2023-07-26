@@ -8,7 +8,7 @@ public class Pizza {
   //  private static final Set<String> names = new HashSet<>();
 //  private static final Set<String> sizes = new HashSet<>();
   // Map<Название, Map<Размер, Стоимость>>
-  private static final Map<String, Map<String, Double>> prices = new HashMap<>();
+  private static final Map<String, Map<String, Double>> prices = readFromCsv("res/pizzas.csv");
 
   private final String name;
   private final String size;
@@ -28,7 +28,6 @@ public class Pizza {
   }
 
   public static Pizza readData(Scanner scanner) {
-    // TODO: избавиться от дублирования
     System.out.print("Выберите пиццу: ");
     for (String name : prices.keySet()) {
       System.out.println("- " + name);
@@ -53,6 +52,13 @@ public class Pizza {
       size = scanner.nextLine();
     }
     return new Pizza(name, size);
+  }
+
+  private static Map<String, Map<String, Double>> readFromCsv(String filename) {
+    // CVS - comma separated values - значения, разделённые запятой (или точкой с запятой)
+    // самый простой формат таблиц
+    Map<String, Map<String, Double>> result = new HashMap<>();
+    return result;
   }
 }
 
