@@ -30,8 +30,11 @@ public class Pizza {
     price = sizeToPrice.get(size);
   }
 
-  public static Pizza readData(Scanner scanner) {
-    System.out.print("Выберите пиццу: ");
+  // фабричный метод:
+  // прочитает параметры пиццы в интерактивном режиме
+  // (когда есть взаимодействие)
+  public static Pizza readInteractive(Scanner scanner) {
+    System.out.println("Выберите пиццу: ");
     for (String name : prices.keySet()) {
       System.out.println("- " + name);
     }
@@ -51,7 +54,7 @@ public class Pizza {
     String size = scanner.nextLine();
     while (!sizes.contains(size)) {
       System.out.println("Некорректный размер: " + size);
-      System.out.println("Введите размер: ");
+      System.out.print("Введите размер: ");
       size = scanner.nextLine();
     }
     return new Pizza(name, size);
@@ -65,22 +68,27 @@ public class Pizza {
     try {
       Scanner scanner = new Scanner(pizzasFile);
       while (scanner.hasNextLine()) {
+        // line = "Capricciosa;Small;7.5"
         String line = scanner.nextLine();
+        // cells = ["Capricciosa", "Small", "7.5"]
         String[] cells = line.split(SEP);
         if (cells.length != 3) {
           System.out.println("Некорректная строка файла: " + line);
           continue;
         }
         try {
+          // pizza = "Cappricciosa"
           String pizza = cells[0];
+          // size = "Small"
           String size = cells[1];
+          // price = Double.parseDouble("7.5") = 7.5
           double price = Double.parseDouble(cells[2]);
           if (!result.containsKey(pizza)) { // пицца встретилась впервые
             result.put(pizza, new HashMap<>()); // кладём ей пока пустой словарь "размер-цена"
           }
           // теперь словарь "размер-цена" для пиццы точно есть
           result.get(pizza).put(size, price);
-        } catch (NumberFormatException e) {
+        } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
           System.out.println("Некорректная строка файла: " + e);
         }
       }

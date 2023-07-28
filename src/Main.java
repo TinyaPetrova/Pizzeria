@@ -22,7 +22,7 @@ public class Main {
       MenuCommand command = MenuCommand.readCommand(scanner);
       switch (command) {
         case START:
-          Pizza pizza = Pizza.readData(scanner);
+          Pizza pizza = Pizza.readInteractive(scanner);
           break;
         case UNEXPECTED:
           System.out.println("Некорректная команда");
