@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
 
-public class Pizza {
+public class Pizza implements Comparable<Pizza> {
 
   //  private static final Set<String> names = new HashSet<>();
 //  private static final Set<String> sizes = new HashSet<>();
@@ -49,8 +49,8 @@ public class Pizza {
   // прочитает параметры пиццы в интерактивном режиме
   // (когда есть взаимодействие)
   public static Pizza readInteractive(Scanner scanner) {
-    String name = readValueFromSet(scanner, prices.keySet(), "Название");
-    String size = readValueFromSet(scanner, prices.get(name).keySet(), "Размер");
+    String name = readValueFromSet(scanner, prices.keySet(), "название");
+    String size = readValueFromSet(scanner, prices.get(name).keySet(), "размер");
     return new Pizza(name, size);
   }
 
@@ -91,5 +91,55 @@ public class Pizza {
       System.out.println("Не найден файл: " + e);
     }
     return result;
+  }
+
+  @Override
+  public String toString() {
+    return "Pizza{" +
+        "name='" + name + '\'' +
+        ", size='" + size + '\'' +
+        ", price=" + price +
+        '}';
+  }
+
+  @Override
+  public int compareTo(Pizza o) {
+    // метод compareTo сравнивает текущий объект (this) с аргументом (o - object - other)
+    // если this < o, то метод должен вернуть любое отриц число       - ответ < 0
+    // если this = o, то метод должен вернуть 0                       - ответ = 0
+    // если this > o, то метод должен вернуть любое положит число     - ответ > 0
+
+    // a < b ---> r < 0 ---> a - b < b - b (0)
+    // a = b ---> r = 0 ---> a - b = b - b (0)
+    // a > b ---> r > 0 ---> a - b > b - b (0)
+    // метод compareTo устроен так, чтобы возвращать разницу (this - o)
+    // если сравнение объектов можно превратить в сравнение чисел (есть метрика)
+    // то такие числа будут иногда называться ключами сравнения (comparison key)
+
+    // если в числа превратить нельзя или сложно
+    // если названия разные, то по названиям
+
+//    int result = name.compareTo(o.name);
+//    if (result != 0) { // compareTo != 0 --> названия не равны
+//      return result; // по названиям
+//    }
+
+    if (!name.equals(o.name)) { // compareTo != 0 --> названия не равны
+      return name.compareTo(o.name); // по названиям
+    }
+
+    // если названия одинаковые, то по цене
+    // Math.signum - знак числа (отриц в -1.0, полож. +1.0)
+
+//    return (int) Math.signum(this.price - o.price);
+    // Double a = x
+    // Double a = y
+    return Double.compare(price, o.price);
+
+    // размер игнорируем, тк он связан с ценой
+
+    // переопределение equals() должно приводить к переопределению метода equals()
+    // это приводит к переопределению метода haschCode()
+    // эти три метода должны быть КОНСИСТЕНТНЫМИ: вести себя одинаково
   }
 }
