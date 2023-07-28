@@ -1,3 +1,5 @@
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
@@ -7,6 +9,7 @@ public class Pizza {
 
   //  private static final Set<String> names = new HashSet<>();
 //  private static final Set<String> sizes = new HashSet<>();
+  private static final String SEP = ";";
   // Map<Название, Map<Размер, Стоимость>>
   private static final Map<String, Map<String, Double>> prices = readFromCsv("res/pizzas.csv");
 
@@ -15,7 +18,7 @@ public class Pizza {
   private final double price;
 
   public Pizza(String name, String size) {
-    if (prices.containsKey(name)) {
+    if (!prices.containsKey(name)) {
       throw new IllegalArgumentException("Некорректное название пиццы: " + name);
     }
     this.name = name;
@@ -34,13 +37,13 @@ public class Pizza {
     }
     System.out.print("Введите название: ");
     String name = scanner.nextLine();
-    while (prices.containsKey(name)) {
+    while (!prices.containsKey(name)) {
       System.out.println("Некорректное название пиццы: " + name);
       System.out.print("Введите название: ");
       name = scanner.nextLine();
     }
     Set<String> sizes = prices.get(name).keySet();
-    System.out.print("Выберите размер: ");
+    System.out.println("Выберите размер: ");
     for (String size : sizes) {
       System.out.println("- " + size);
     }
@@ -58,6 +61,33 @@ public class Pizza {
     // CVS - comma separated values - значения, разделённые запятой (или точкой с запятой)
     // самый простой формат таблиц
     Map<String, Map<String, Double>> result = new HashMap<>();
+    File pizzasFile = new File(filename);
+    try {
+      Scanner scanner = new Scanner(pizzasFile);
+      while (scanner.hasNextLine()) {
+        String line = scanner.nextLine();
+        String[] cells = line.split(SEP);
+        if (cells.length != 3) {
+          System.out.println("Некорректная строка файла: " + line);
+          continue;
+        }
+        try {
+          String pizza = cells[0];
+          String size = cells[1];
+          double price = Double.parseDouble(cells[2]);
+          if (!result.containsKey(pizza)) { // пицца встретилась впервые
+            result.put(pizza, new HashMap<>()); // кладём ей пока пустой словарь "размер-цена"
+          }
+          // теперь словарь "размер-цена" для пиццы точно есть
+          result.get(pizza).put(size, price);
+        } catch (NumberFormatException e) {
+          System.out.println("Некорректная строка файла: " + e);
+        }
+      }
+      scanner.close();
+    } catch (FileNotFoundException e) {
+      System.out.println("Не найден файл: " + e);
+    }
     return result;
   }
 }
