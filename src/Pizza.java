@@ -2,6 +2,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Scanner;
 import java.util.Set;
 
@@ -150,7 +151,28 @@ public class Pizza implements Comparable<Pizza> {
     // размер игнорируем, тк он связан с ценой
 
     // переопределение equals() должно приводить к переопределению метода equals()
-    // это приводит к переопределению метода haschCode()
+    // это приводит к переопределению метода hashCode()
     // эти три метода должны быть КОНСИСТЕНТНЫМИ: вести себя одинаково
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (!(o instanceof Pizza other)) {
+      return false;
+    }
+//    return price == pizza.price &&
+//        Objects.equals(name, pizza.name) &&
+//        Objects.equals(size, pizza.size);
+    return price == other.price && // сначала сравниваем цифры, это быстрее
+        name.equals(other.name) &&
+        size.equals(other.size);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(name, size, price);
   }
 }
