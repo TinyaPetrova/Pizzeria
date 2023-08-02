@@ -24,7 +24,11 @@ public class Pizza implements Comparable<Pizza> {
     this.price = price;
   }
 
-//  public Pizza(String name, String size) {
+  public double getPrice() {
+    return price;
+  }
+
+  //  public Pizza(String name, String size) {
 //    if (!prices.containsKey(name)) {
 //      throw new IllegalArgumentException("Некорректное название пиццы: " + name);
 //    }
@@ -167,8 +171,8 @@ public class Pizza implements Comparable<Pizza> {
 //        Objects.equals(name, pizza.name) &&
 //        Objects.equals(size, pizza.size);
     return price == other.price && // сначала сравниваем цифры, это быстрее
-        name.equals(other.name) &&
-        size.equals(other.size);
+        size.equals(other.size) &&
+        name.equals(other.name);
   }
 
   @Override
